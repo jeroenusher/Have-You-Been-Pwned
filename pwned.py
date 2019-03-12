@@ -30,12 +30,16 @@ if __name__ == '__main__':
         password = sys.argv[1]
         password_hash = get_sha1_hash(password)
         response = poll_api(password_hash[:5])
-        occurrences = evaluate_results(password_hash, response)
 
-        if occurrences:
-            print(password + ' was found')
-            print('Hash ' + password_hash + ', ' + occurrences + ' occurrences')
+        if response.status_code == 200:
+            occurrences = evaluate_results(password_hash, response)
+
+            if occurrences:
+                print(password + ' was found')
+                print('Hash ' + password_hash + ', ' + occurrences + ' occurrences')
+            else:
+                print(password + ' was not found')
         else:
-            print(password + ' was not found')
+            print('Invalid API request')
     except IndexError:
-        print('No password argument.')
+        print('No password argument')
